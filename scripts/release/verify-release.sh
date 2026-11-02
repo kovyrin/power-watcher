@@ -54,7 +54,10 @@ expect "$(/usr/bin/stat -f '%Lp' "$binary")" 755 'main executable permissions mu
 ' || fail 'binary deployment targets must both be macOS 26.0'
 /usr/bin/codesign --verify --deep --strict "$app" || fail 'invalid app signature'
 if [[ "$development" == 0 ]]; then
-  /usr/bin/codesign -dv --verbose=4 "$app" 2>&1 | /usr/bin/grep -q '^Authority=Developer ID Application:'
+  # Consume the complete codesign output: grep -q can close the pipe early and
+  # turn a successful identity match into SIGPIPE under pipefail.
+  /usr/bin/codesign -dv --verbose=4 "$app" 2>&1 |
+    /usr/bin/grep '^Authority=Developer ID Application:' >/dev/null || fail 'app is not Developer ID signed'
   /usr/bin/xcrun stapler validate "$app"
   /usr/sbin/spctl --assess --type execute --verbose "$app"
   /usr/bin/syspolicy_check distribution "$app"
