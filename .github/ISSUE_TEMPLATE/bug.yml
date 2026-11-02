@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a reproducible problem with Power Watcher.
+body:
+  - type: markdown
+    attributes:
+      value: Do not include private screenshots, credentials, or full system logs. Report vulnerabilities using Security > Report a vulnerability.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: App/macOS versions, Apple silicon/Intel, and relevant display setup.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include battery/power state or the preview used, where relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Optional evidence
+      description: Privacy-safe screenshots or a small relevant log excerpt.
