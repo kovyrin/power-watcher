@@ -45,6 +45,7 @@ expect "$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$app/Co
 expect "$(/usr/libexec/PlistBuddy -c 'Print LSMinimumSystemVersion' "$app/Contents/Info.plist")" \
   26.0 'wrong minimum macOS version'
 expect "$(/usr/bin/readlink "$mount_directory/Applications")" /Applications 'wrong Applications shortcut'
+expect "$(/usr/bin/stat -f '%Lp' "$binary")" 755 'main executable permissions must be 755'
 /usr/bin/lipo "$binary" -verify_arch arm64 || fail 'arm64 slice missing'
 /usr/bin/lipo "$binary" -verify_arch x86_64 || fail 'x86_64 slice missing'
 /usr/bin/xcrun vtool -show-build "$binary" | /usr/bin/awk '

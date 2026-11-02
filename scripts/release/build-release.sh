@@ -64,9 +64,12 @@ if [[ "$development" == 0 ]]; then
     notary_arguments=(--key "$notary_key_path" --key-id "$POWER_WATCHER_NOTARY_KEY_ID"
                       --issuer "$POWER_WATCHER_NOTARY_ISSUER_ID")
   fi
-  /usr/bin/codesign --force --sign "$POWER_WATCHER_CODESIGN_IDENTITY" \
-    ${keychain_arguments[@]+"${keychain_arguments[@]}"} --options runtime --timestamp \
-    --entitlements Resources/PowerWatcher.entitlements "$app"
+  (
+    umask 022
+    /usr/bin/codesign --force --sign "$POWER_WATCHER_CODESIGN_IDENTITY" \
+      ${keychain_arguments[@]+"${keychain_arguments[@]}"} --options runtime --timestamp \
+      --entitlements Resources/PowerWatcher.entitlements "$app"
+  )
   /usr/bin/codesign --verify --deep --strict "$app"
   /usr/bin/syspolicy_check notary-submission "$app"
 fi
@@ -99,7 +102,10 @@ if [[ "$development" == 0 ]]; then
   # Staple the app before packaging, so the installed copy also carries a ticket.
   notarize "$temporary/app.zip" app "$app"
 fi
+/bin/chmod -R u+rwX,go+rX "$app"
+/usr/bin/codesign --verify --deep --strict "$app"
 mkdir -p "$temporary/dmg"
+/bin/chmod 755 "$temporary/dmg"
 /usr/bin/ditto "$app" "$temporary/dmg/Power Watcher.app"
 /bin/ln -s /Applications "$temporary/dmg/Applications"
 /usr/bin/hdiutil create -volname "Power Watcher $version" -srcfolder "$temporary/dmg" \

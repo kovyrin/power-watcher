@@ -1,5 +1,7 @@
 #!/bin/bash
 set -euo pipefail
+# This script writes only public app/build artifacts, not signing credentials.
+umask 022
 
 project_root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$project_root"
@@ -23,6 +25,7 @@ cp Resources/PrivacyInfo.xcprivacy "$app_path/Contents/Resources/PrivacyInfo.xcp
 iconset_path="$project_root/.build/AppIcon.iconset"
 xcrun swift scripts/make-icon.swift "$iconset_path"
 iconutil --convert icns "$iconset_path" --output "$app_path/Contents/Resources/AppIcon.icns"
+/bin/chmod -R u+rwX,go+rX "$app_path"
 codesign --force --sign - "$app_path"
 codesign --verify --strict "$app_path"
 echo "Built: $app_path"
