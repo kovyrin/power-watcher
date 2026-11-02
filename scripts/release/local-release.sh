@@ -24,7 +24,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 if [[ "$credentials_ready" == 0 && -f .agent-secret.release.yml ]]; then
-  exec agent-secret exec --config .agent-secret.release.yml --profile release -- \
+  exec agent-secret exec --force-refresh --config .agent-secret.release.yml --profile release -- \
     /bin/bash "$0" --credentials-ready ${original_arguments[@]+"${original_arguments[@]}"}
 fi
 temporary=$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/power-watcher-local-release.XXXXXX")
