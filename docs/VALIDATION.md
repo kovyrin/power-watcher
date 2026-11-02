@@ -26,3 +26,17 @@ upload validation, and App Review remain release work. See [Releasing](RELEASING
 
 CI performs a fresh unit/lint run, universal build, and unsigned Xcode archive.
 It does not submit an app or claim live-battery validation.
+
+## macOS 26 release candidate, November 2, 2026
+
+- Minimum deployment target raised to macOS 26 in SwiftPM, Xcode, and the plist.
+- Eight policy test groups and thirteen synthetic release-guard cases passed.
+- GUI self-checks, including a real internal-battery read, passed.
+- Universal development DMG was created and mounted read-only. Both Mach-O slices
+  declare macOS 26.0; bundle metadata, Applications shortcut, signatures, and
+  download checksums passed verification.
+- A universal unsigned Xcode archive for the new deployment target succeeded.
+
+These development checks do not establish Developer ID signing, Apple
+notarization, or final Gatekeeper acceptance. Those are enforced separately by
+production release verification before publication.

@@ -3,6 +3,97 @@
 The development ZIP is ad-hoc signed. It is not a Mac App Store submission or
 a notarized public download.
 
+## Local signed DMG and GitHub publication
+
+Requires macOS 26+, Xcode 26+ with Swift 6.2, and the GitHub CLI authenticated for
+the target repository. Commit and push source changes, then wait for CI to pass.
+
+```sh
+make check
+./scripts/release/build-release.sh --development
+```
+
+The development flag tests DMG assembly, mounting, architecture, deployment
+targets, checksums, and code-signature integrity without release credentials.
+Its filenames include `-development`; it cannot be published by the production
+publisher. It is not a public download.
+
+Production signing accepts these environment variables, delivered by your
+preferred secret manager or CI. Never put resolved values in repository files:
+
+| Variable | Purpose |
+| --- | --- |
+| `POWER_WATCHER_CODESIGN_IDENTITY` | Developer ID Application identity |
+| `POWER_WATCHER_CODESIGN_CERT_P12_PATH` | Optional local certificate file |
+| `POWER_WATCHER_CODESIGN_CERT_P12_BASE64` | Base64 certificate |
+| `POWER_WATCHER_CODESIGN_CERT_PASSWORD` | Password for certificate import |
+| `POWER_WATCHER_NOTARY_PROFILE` | Existing notarytool Keychain profile |
+| `POWER_WATCHER_NOTARY_KEY` | API private key contents or local `.p8` path |
+| `POWER_WATCHER_NOTARY_KEY_ID` | App Store Connect team API key ID |
+| `POWER_WATCHER_NOTARY_ISSUER_ID` | App Store Connect team API issuer ID |
+
+Use either a notary profile or all three API key variables. A provided `.p12`
+is imported into a temporary keychain, which is deleted on exit. The identity
+can be detected from that certificate if omitted. Without a `.p12`, the named
+Developer ID identity must already exist in a usable keychain. Apple Development
+and ad-hoc identities are rejected.
+
+For an optional Agent Secret integration, create an ignored
+`.agent-secret.release.yml` with a `release` profile that maps the password and
+notary aliases above to your exact refs. No private ref names are included in
+the public repository. The local wrapper invokes that profile and reads only
+the binary certificate ref explicitly supplied on the command line:
+
+```sh
+./scripts/release/local-release.sh \
+  --certificate-ref 'op://Example/Release Certificate/certificate.p12'
+```
+
+This uses Agent Secret for text credentials and `op read --out-file` only for the
+operator-selected binary attachment. It performs no vault search. The `.p12`,
+API-key file, and imported keychain are private temporary files removed on exit.
+Without the optional config file, the same wrapper uses credentials supplied by
+another environment-based secret manager. Add `--publish` to make the verified
+release public after building it; otherwise it uploads a draft.
+
+```sh
+./scripts/release/build-release.sh
+./scripts/release/publish-release.sh
+# After reviewing the verified draft, publish explicitly:
+./scripts/release/publish-release.sh --publish
+```
+
+The builder creates `dist/releases/vVERSION/` containing a DMG, `checksums.txt`,
+and `release-info.json`. The app is sandboxed, signed with Hardened Runtime and
+a secure timestamp, notarized and stapled before DMG creation. The DMG is also
+signed, notarized, stapled, mounted read-only, and checked with Gatekeeper.
+Notarization receipts stay in ignored `dist/notarization/`.
+
+Publication requires a clean checkout at current `origin/main`, passing CI for
+that exact commit, artifact/source commit agreement, dated nonempty changelog
+notes, and a matching version tag. It creates the tag through the GitHub API if
+needed, uploads a draft, and refuses to replace a published release. Only
+`--publish` makes it public. Download the published assets again and verify their
+checksums before announcing the release.
+
+## Optional GitHub signing workflow
+
+The manual **Signed DMG** workflow follows the same temporary-keychain approach
+used by [Agent Secret](https://github.com/kovyrin/agent-secret). It is independent
+of that repository and uses only this repository's GitHub Secrets. Configure the
+certificate base64/password/identity and three API-key variables from the table
+above as repository secrets, retaining their `POWER_WATCHER_` names.
+
+```sh
+gh workflow run release.yml --ref main
+```
+
+This workflow checks source without secrets, validates signing inputs, then
+builds and verifies production artifacts before creating a draft. It never
+reads a password vault or automatically publishes. Existing secrets in another
+repository are not implicitly available here and cannot be copied through the
+GitHub secrets read API. Supply them through an authorized original source.
+
 ## Validate a candidate
 
 ```sh
@@ -88,5 +179,6 @@ Use Developer ID signing, Hardened Runtime, notarization, and stapling before
 publishing a trusted direct download. `scripts/package-app.sh` only packages
 the existing development app; it does not perform distribution signing.
 
-Tag and publish a GitHub release only after the candidate and distribution path
-are ready. No workflow in this repository uploads to Apple or publishes releases.
+Tag and publish only after the candidate and distribution path are ready. The
+manual Signed DMG workflow submits to Apple's automated notary service and
+creates a GitHub draft; it does not submit to App Review or publish automatically.

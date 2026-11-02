@@ -5,7 +5,7 @@ filing a bug. Discuss larger features in an issue before implementing them.
 
 ## Local setup
 
-Use macOS 14+, Xcode 16+ with Swift 6, and a supported Node.js LTS release for
+Use macOS 26+, Xcode 26+ with Swift 6.2, and a supported Node.js LTS release for
 Markdown linting (22.22+, 24.15+, or 26+; CI uses 26).
 
 ```sh

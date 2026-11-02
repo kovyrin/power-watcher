@@ -20,3 +20,9 @@ write artifacts in the workspace.
 Never commit certificates, provisioning profiles, App Store Connect keys,
 credentials, or environment files. Signing and uploading are maintainer
 operations; pull-request CI has read-only repository permissions.
+
+The manual Signed DMG workflow uses repository-scoped GitHub Secrets only on
+`main`, not pull requests. It imports the certificate into a temporary keychain,
+removes that keychain on exit, and creates a draft only after signature,
+notarization, checksum, source-commit, and Gatekeeper checks pass. Published
+release assets are never overwritten by the release scripts.

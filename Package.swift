@@ -1,9 +1,9 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 import PackageDescription
 
 let package = Package(
     name: "PowerWatcher",
-    platforms: [.macOS(.v14)],
+    platforms: [.macOS(.v26)],
     products: [
         .library(name: "PowerWatcherCore", targets: ["PowerWatcherCore"]),
         .executable(name: "PowerWatcher", targets: ["PowerWatcher"])

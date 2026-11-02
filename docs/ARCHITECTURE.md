@@ -49,6 +49,13 @@ The checked-in Xcode project builds a sandboxed app using the same local package
 `PowerWatcherCore` library, icon assets, and privacy manifest. The Xcode archive
 is the starting point for an App Store submission. See [Releasing](RELEASING.md).
 
+For direct downloads, `scripts/release/` builds universal macOS 26+ binaries,
+imports an optional certificate into an ephemeral keychain, applies Developer ID
+and sandbox signatures, notarizes/staples both the app and DMG, and verifies the
+mounted payload. A separate publisher checks provenance and CI before creating a
+GitHub draft or explicitly publishing it. Development DMGs have different names
+and are refused by production verification.
+
 ## Apple API references
 
 - [Power-source notifications](https://developer.apple.com/documentation/iokit/1523868-iopsnotificationcreaterunloopsou)

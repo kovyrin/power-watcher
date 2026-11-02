@@ -1,0 +1,52 @@
+name: Signed DMG
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: signed-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '26'
+          cache: npm
+      - name: Test source without signing credentials
+        run: |
+          npm ci
+          make check
+      - name: Check production signing configuration
+        env:
+          POWER_WATCHER_CODESIGN_IDENTITY: ${{ secrets.POWER_WATCHER_CODESIGN_IDENTITY }}
+          POWER_WATCHER_CODESIGN_CERT_P12_BASE64: ${{ secrets.POWER_WATCHER_CODESIGN_CERT_P12_BASE64 }}
+          POWER_WATCHER_CODESIGN_CERT_PASSWORD: ${{ secrets.POWER_WATCHER_CODESIGN_CERT_PASSWORD }}
+          POWER_WATCHER_NOTARY_KEY: ${{ secrets.POWER_WATCHER_NOTARY_KEY }}
+          POWER_WATCHER_NOTARY_KEY_ID: ${{ secrets.POWER_WATCHER_NOTARY_KEY_ID }}
+          POWER_WATCHER_NOTARY_ISSUER_ID: ${{ secrets.POWER_WATCHER_NOTARY_ISSUER_ID }}
+        run: scripts/release/check-signing-env.sh --require-certificate
+      - name: Build, sign, notarize, and verify
+        env:
+          POWER_WATCHER_CODESIGN_IDENTITY: ${{ secrets.POWER_WATCHER_CODESIGN_IDENTITY }}
+          POWER_WATCHER_CODESIGN_CERT_P12_BASE64: ${{ secrets.POWER_WATCHER_CODESIGN_CERT_P12_BASE64 }}
+          POWER_WATCHER_CODESIGN_CERT_PASSWORD: ${{ secrets.POWER_WATCHER_CODESIGN_CERT_PASSWORD }}
+          POWER_WATCHER_NOTARY_KEY: ${{ secrets.POWER_WATCHER_NOTARY_KEY }}
+          POWER_WATCHER_NOTARY_KEY_ID: ${{ secrets.POWER_WATCHER_NOTARY_KEY_ID }}
+          POWER_WATCHER_NOTARY_ISSUER_ID: ${{ secrets.POWER_WATCHER_NOTARY_ISSUER_ID }}
+        run: scripts/release/build-release.sh
+      - name: Create verified draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/release/publish-release.sh

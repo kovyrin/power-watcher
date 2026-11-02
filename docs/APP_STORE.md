@@ -29,7 +29,7 @@ Connect power and the warning disappears.
 - Optional launch at login.
 - No accounts, ads, tracking, or background networking.
 
-Requires macOS 14 or later. Battery readings and shutdown timing depend on your
+Requires macOS 26 or later. Battery readings and shutdown timing depend on your
 Mac. Power Watcher provides a reminder and does not prevent shutdown.
 
 ## URLs

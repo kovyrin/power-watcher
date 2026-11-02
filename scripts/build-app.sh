@@ -12,7 +12,10 @@ case "${1:-}" in
 esac
 swift build "${build_arguments[@]}"
 binary_directory="$(swift build "${build_arguments[@]}" --show-bin-path)"
-app_path="$project_root/dist/Power Watcher.app"
+app_output="${POWER_WATCHER_BUILD_OUTPUT:-$project_root/dist}"
+mkdir -p "$app_output"
+app_output="$(cd "$app_output" && pwd)"
+app_path="$app_output/Power Watcher.app"
 mkdir -p "$app_path/Contents/MacOS" "$app_path/Contents/Resources"
 cp "$binary_directory/PowerWatcher" "$app_path/Contents/MacOS/PowerWatcher"
 cp Resources/Info.plist "$app_path/Contents/Info.plist"

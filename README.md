@@ -26,13 +26,17 @@ disappears.
 
 ## Requirements
 
-- macOS 14 Sonoma or later; Apple silicon or Intel.
-- To build: Xcode 16 or later with Swift 6 and Command Line Tools.
+- macOS 26 Tahoe or later; Apple silicon or Intel.
+- To build: Xcode 26 or later with Swift 6.2 and Command Line Tools.
 - To lint documentation: Node.js 22.22+, 24.15+, or 26+ and npm (CI uses 26).
 
 ## Install from source
 
-There is no signed public binary or App Store release yet.
+Official signed and notarized DMGs, when available, are on
+[GitHub Releases](https://github.com/kovyrin/power-watcher/releases). Install by
+opening the DMG and dragging Power Watcher into Applications. Updates are manual.
+
+To build locally:
 
 ```sh
 git clone https://github.com/kovyrin/power-watcher.git
@@ -78,6 +82,12 @@ See [Architecture](docs/ARCHITECTURE.md).
 | `make package` | Development ZIP and SHA-256 checksum |
 | `make icons` | Regenerate original app icon artwork |
 | `./scripts/archive.sh --unsigned` | Local Xcode archive check |
+| `make release-build` | Signed, notarized, verified universal DMG |
+| `make release-push` | Upload verified assets as a GitHub draft |
+
+Production release commands require a Developer ID certificate and notarization
+credentials. The local scripts and manual GitHub workflow use temporary signing
+keychains and never publish an ad-hoc build. See [Releasing](docs/RELEASING.md).
 
 ## Warning behavior
 
