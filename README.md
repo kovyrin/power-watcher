@@ -11,7 +11,7 @@ wider and brighter at **2%**, then turns an insistent red at **1%**. The center
 stays clear, and clicks and typing pass through normally. Plug in, and the glow
 disappears.
 
-![Controls with a simulated battery reading](docs/images/controls.png)
+![Display-edge battery warning (illustration)](docs/images/hero.png)
 
 ## Features
 

@@ -1,0 +1,26 @@
+Generation mode: built-in imagegen
+Brand reference: Resources/Assets.xcassets/AppIcon.appiconset/icon_256x256.png
+Effect reference: .build/self-check/glow-1.png (rendered by the app self-check)
+
+Use case: ads-marketing
+Asset type: a premium landscape 16:9 GitHub README hero and social launch image for Power Watcher.
+Primary request: Make a fresh marketing graphic that accurately shows what this macOS utility does: a translucent warning band around the OUTER EDGES OF THE ENTIRE PHYSICAL DISPLAY, leaving work unobstructed. The previous concept was confusing because it looked like colored borders around application windows. Make the display-wide effect unmistakable.
+
+Input image 1 is the actual app icon, a BRAND REFERENCE: reproduce it faithfully beside the name "Power Watcher".
+Input image 2 is an AUTHENTIC APP-RENDERED OVERLAY, a functional visual reference for the red warning. The center of this PNG is transparent, not black content. It shows red at all four screen edges fading smoothly inward to 0% opacity. At 1%, the band ends 56 points inward on a 960 by 600 point screen. Reference the inward-fading band, not an exterior neon outline.
+
+Design: refined indie Mac app launch, warm ivory headline on deep charcoal, spacious confident typography, restrained background. At the upper left, small icon + exact "Power Watcher". Below it headline exactly:
+"Never miss a low
+battery warning again."
+Below the headline, a smaller line exactly: "Pulsing screen edges. Your work stays clear."
+
+Main visual: ONE large, beautifully rendered, nearly front-on open modern silver Mac laptop with a clearly visible physical metal lid, black screen bezel, subtle center camera notch, and a little keyboard/trackpad below. The display occupies most of the lower two thirds; the device is complete and not cropped. Show its entire desktop from menu bar at the top through dock at the bottom. Inside is a realistic generic macOS-like work scene: muted blue-gray wallpaper, a large central LIGHT document/editor window with a sidebar and understated dark lines of text. Use only fictional non-personal document content. Leave visible desktop wallpaper around that window so its edges are clearly separate from the actual physical screen edges.
+
+The urgent red warning is ONLY INSIDE the illuminated display, aligned flush against ALL FOUR OUTERMOST DISPLAY EDGES. It is a broad soft translucent RED-TO-TRANSPARENT INWARD GRADIENT, opaque/brighter at the extreme screen boundary, completely gone about 6% inward. It overlays the outer menu bar / outer dock regions as a display overlay would. The CENTRAL LIGHT DOCUMENT stays clear, neutral, legible, without any red tint or red border. There must be ZERO colored border around the document window itself. Keep the metal bezel, keyboard, background, and outside of the device neutral: no red neon tubing or red glow spilling into the real world. This is screen content, not RGB lighting on hardware. A small "1%" battery readout in the top right menu bar reinforces the state.
+
+At the bottom of the poster, below the laptop, a small elegant legend using appropriately colored dots and exact labels:
+"3% Amber     2% Orange     1% Red"
+And one quiet footer line exactly:
+"Free & open source · macOS 26+"
+
+Constraints: ONE full display/device, no triptych, no floating framed screen cards, no application-window warning outlines, no modal dialogs or banners, no popup saying low battery, no notification badge, no separate battery illustration, no Apple logo or App Store badge, no other headline, no extra prose or fake controls, no personal data, no watermark. All text must be spelled perfectly. Marketing illustration with faithful product behavior, not a claimed pixel-perfect screenshot.
