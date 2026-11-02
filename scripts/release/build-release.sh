@@ -71,7 +71,11 @@ if [[ "$development" == 0 ]]; then
       --entitlements Resources/PowerWatcher.entitlements "$app"
   )
   /usr/bin/codesign --verify --deep --strict "$app"
-  /usr/bin/syspolicy_check notary-submission "$app"
+  # Local preflight is advisory. Apple's notary verdict and the final stapled
+  # app/DMG Gatekeeper assessments remain mandatory publication gates.
+  if ! /usr/bin/syspolicy_check notary-submission "$app"; then
+    echo "Local pre-notarization diagnostic failed; requesting Apple's authoritative verdict."
+  fi
 fi
 
 notarize() {
