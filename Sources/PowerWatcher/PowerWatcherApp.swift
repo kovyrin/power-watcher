@@ -111,11 +111,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func openControls() { showPopover() }
 
     private func showPopover() {
-        guard let button = statusItem?.button else { return }
+        guard let button = statusItem?.button,
+              let contentView = popover.contentViewController?.view else { return }
         model.refreshLoginStatus()
         NSApp.activate(ignoringOtherApps: true)
+        // Use the SwiftUI layout size before AppKit positions the popover.
+        popover.contentSize = contentView.fittingSize
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-        popover.contentViewController?.view.window?.makeKey()
+        contentView.window?.makeKey()
     }
 
     @objc private func screensChanged() { render(rebuild: true) }

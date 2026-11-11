@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.1] - 2026-11-10
+
+- Fix the menu bar panel opening partly offscreen on MacBooks with a notch.
+
 ## [0.1.0] - 2026-11-02
 
 - Native macOS menu-bar utility for macOS 26 Tahoe and later.
